@@ -7,7 +7,7 @@
   (click)="clearCompleted()">Clear completed</button>
   <button class="btn btn-default"
   style="font-size:smaller;margin-bottom:12px"
-  (click) = "showInProgres()" >Show {{currentFilterSetting ? 'In progress' : 'All'}} </button>
+  (click) = "showInProgres()" >Show {{currentFilterSetting ? 'All' : 'In progress'}} </button>
   
     <tbody class='table' *ngIf='myTasks && myTasks.length'>
     <tr *ngFor= 'let todo of myTasks'>

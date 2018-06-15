@@ -89,8 +89,9 @@ export class ToDoListComponent implements OnInit {
               (error: any) => this.errorMessage = <any>error
           );
 
-          this.myTasks.splice(this.myTasks.indexOf(element), 1);
-          this.myTasksCopy.splice(this.myTasks.indexOf(element), 1);
+          let index = this.myTasks.findIndex(x => x.Id == element.Id);
+          this.myTasks.splice(index, 1);
+          this.myTasksCopy.splice(index, 1);
         }
       });
   }
