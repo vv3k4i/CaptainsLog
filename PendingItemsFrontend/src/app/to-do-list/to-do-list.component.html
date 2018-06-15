@@ -1,0 +1,32 @@
+<table >
+  <button class="btn btn-default"
+  style="font-size:smaller;margin-bottom:12px"
+  (click)="addToDo()" >Add task</button>
+  <button class="btn btn-default"
+  style="font-size:smaller;margin-bottom:12px"
+  (click)="clearCompleted()">Clear completed</button>
+  <button class="btn btn-default"
+  style="font-size:smaller;margin-bottom:12px"
+  (click) = "showInProgres()" >Show {{currentFilterSetting ? 'In progress' : 'All'}} </button>
+  
+    <tbody class='table' *ngIf='myTasks && myTasks.length'>
+    <tr *ngFor= 'let todo of myTasks'>
+    <div class="row">
+    <div class="col-lg-12" >
+      <div class="input-group">
+        <span class="input-group-addon">
+          <input type="checkbox" aria-label="..." [(ngModel)] = todo.IsComplete (change) = "updateDb(todo.Id)">
+        </span>
+        <input type="text" class="form-control" aria-label="..." [(ngModel)] = todo.Comment (focusout) = "updateDb(todo.Id)" >
+        <span class="input-group-addon" (click) = "deleteEntry(todo.Id)">
+          
+            <i class="glyphicon glyphicon-remove"></i>
+            <span class="badge js-notifications-count hide"></span>
+     
+        </span>
+      </div><!-- /input-group -->
+    </div><!-- /.col-lg-6 -->
+  </div><!-- /.row -->
+  </tr>
+  </tbody>  
+</table>
