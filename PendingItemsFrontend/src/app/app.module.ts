@@ -6,6 +6,9 @@ import { AppComponent } from './app.component';
 import { ToDoListComponent } from './to-do-list/to-do-list.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { AppBootstrapModule } from './AppBootstrapModule';
+
+
 
 @NgModule({
   declarations: [
@@ -14,8 +17,10 @@ import { FormsModule } from '@angular/forms';
   ],
   imports: [
     BrowserModule,
+    AppBootstrapModule,
     HttpClientModule,
     FormsModule,
+    
     RouterModule.forRoot([
         { path: '', redirectTo: 'todo', pathMatch: 'full'},
         { path: '**', redirectTo: 'todo', pathMatch: 'full'}

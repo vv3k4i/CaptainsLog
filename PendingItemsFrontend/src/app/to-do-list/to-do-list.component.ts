@@ -96,8 +96,6 @@ export class ToDoListComponent implements OnInit {
     }
     
     this._service.updateComment(task).subscribe();
-
-    
   }
 
   clearCompleted(): void {

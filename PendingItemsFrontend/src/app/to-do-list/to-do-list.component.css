@@ -1,0 +1,15 @@
+
+todoTable {
+    background-color: transparent;
+    margin-left: 40px;
+    margin-top: 10px;
+}
+
+table {
+    background-color: transparent;
+    margin-left: 40px;
+}
+
+.strikethrough {
+    text-decoration: line-through;
+  }

@@ -1,14 +1,12 @@
-<table >
-  <button class="btn btn-default"
-  style="font-size:smaller;margin-bottom:12px"
-  (click)="addToDo()" >Add task</button>
-  <button class="btn btn-default"
-  style="font-size:smaller;margin-bottom:12px"
-  (click)="clearCompleted()">Clear completed</button>
-  <button class="btn btn-default"
-  style="font-size:smaller;margin-bottom:12px"
-  (click) = "showInProgres()" >Show {{filterShowCompletedOnly ? 'All' : 'In progress'}} </button>
-  
+
+
+<table class='todoTable'>
+    <div class="btn-group" role="group" aria-label="...">
+      <button class="btn btn-default" (click)="addToDo()" >Add task</button>
+      <button class="btn btn-default" (click)="clearCompleted()" >Clear completed</button>
+      <button class="btn btn-default" (click) ="showInProgres()" >Show {{filterShowCompletedOnly ? 'All' : 'In progress'}} </button>
+    </div>  
+  <span></span>
     <tbody class='table' *ngIf='myTasks && myTasks.length'>
     <tr *ngFor= 'let todo of myTasks'>
     <div class="row">
@@ -17,7 +15,7 @@
         <span class="input-group-addon">
           <input type="checkbox" aria-label="..." [(ngModel)] = todo.IsComplete (change) = "updateTask(todo.Id)">
         </span>
-        <input type="text" class="form-control" aria-label="..." [(ngModel)] = todo.Comment (focusout) = "updateTask(todo.Id)" >
+        <input type="text" class="form-control"  [ngClass]="{ strikethrough: todo.IsComplete }" aria-label="..." [(ngModel)] = todo.Comment (focusout) = "updateTask(todo.Id)" >
         <span class="input-group-addon" (click) = "deleteEntry(todo.Id)">
           
             <i class="glyphicon glyphicon-remove"></i>
