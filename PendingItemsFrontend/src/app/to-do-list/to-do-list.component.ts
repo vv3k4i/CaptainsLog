@@ -26,7 +26,7 @@ export class ToDoListComponent implements OnInit {
 
   messageValue: string;
   errorMessage: string;
-  private currentFilterSetting: boolean = false;
+  private filterShowCompletedOnly: boolean = false;
 
   private myTasksCopy: IToDo[] = [];
   private tempTasks: IToDo[] = [];
@@ -43,40 +43,61 @@ export class ToDoListComponent implements OnInit {
 
   showInProgres(): void {
 
-    if (this.currentFilterSetting == false) {
+    this.updateInProgress();
+    this.toggleVisiblity();
+  }
 
-      this.myTasks = this.myTasks.slice().filter(x => x.IsComplete == this.currentFilterSetting);
+  updateInProgress(): void{
+
+    if (this.filterShowCompletedOnly == false) {
+      //show only not completed
+      this.myTasks = this.myTasks.slice().filter(x => x.IsComplete == false);
+      console.log(this.myTasks);
     }
     else {
-      this.tempTasks.length = 0;
-      this.myTasksCopy.slice().forEach(task => {
-        var match = this.myTasks.find(t => t.Id == task.Id );
-        if (match != null)
-        {
-            this.tempTasks.push(match);
-        }
-        else
-        {
-          this.tempTasks.push(task);
-        }
-      })
+      //show all
+      this.combineAllUpToDate();
       this.myTasks = this.tempTasks.slice();
       this.myTasksCopy = this.tempTasks.slice();
+      console.log(this.myTasks);
     }
-    this.toggleVisiblity();
+  }
+
+  combineAllUpToDate() {
+    this.tempTasks.length = 0;
+    this.myTasksCopy.slice().forEach(task => {
+      var match = this.myTasks.find(t => t.Id == task.Id );
+      //use visible element as default to pass around
+      if (match != null)
+      {
+          this.tempTasks.push(match);
+      }
+      else
+      {
+        this.tempTasks.push(task);
+      }
+    });
   }
 
   toggleVisiblity(): void {
 
-    this.currentFilterSetting = !this.currentFilterSetting;
+    this.filterShowCompletedOnly = !this.filterShowCompletedOnly;
   }
 
-  updateDb(id: number) {
+  updateTask(id: number) {
 
     let task = this.myTasks.find(x => x.Id == id);
-    console.log("update entry : " + task.Id);
+    
+    
+    if (this.filterShowCompletedOnly == true) {
+
+      this.myTasks = this.myTasks.filter(x => x.IsComplete == false);
+    console.log(this.myTasks);
+    }
     
     this._service.updateComment(task).subscribe();
+
+    
   }
 
   clearCompleted(): void {
@@ -91,7 +112,8 @@ export class ToDoListComponent implements OnInit {
 
           let index = this.myTasks.findIndex(x => x.Id == element.Id);
           this.myTasks.splice(index, 1);
-          this.myTasksCopy.splice(index, 1);
+          let indexCopy = this.myTasksCopy.findIndex(x => x.Id == element.Id);
+          this.myTasksCopy.splice(indexCopy, 1);
         }
       });
   }
@@ -100,7 +122,8 @@ export class ToDoListComponent implements OnInit {
     
     let index = this.myTasks.findIndex(x => x.Id == id);
     this.myTasks.splice(index, 1);
-    this.myTasksCopy.splice(index, 1);
+    let indexCopy = this.myTasksCopy.findIndex(x => x.Id == id);
+    this.myTasksCopy.splice(indexCopy, 1);
     console.log("delete entry: " + id);
     
     this._service.deleteTodo(id)
@@ -111,9 +134,9 @@ export class ToDoListComponent implements OnInit {
     
     let dummyToDo = new ToDo();
     this._service.createToDo(dummyToDo).subscribe(todo => {
-      this.myTasks.push(todo)
-      this.myTasksCopy.push(todo);
-      console.log("Add entry: " + todo.Id);
+    this.myTasks.push(todo)
+    this.myTasksCopy.push(todo);
+    console.log("Add entry: " + todo.Id);
     });  
   }
 }
