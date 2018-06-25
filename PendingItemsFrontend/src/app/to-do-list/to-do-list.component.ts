@@ -5,49 +5,59 @@ import { ToDo, IToDo } from './todo';
 import 'rxjs/add/operator/do';
 
 @Component({
+
   selector: 'app-to-do-list',
   templateUrl: './to-do-list.component.html',
   styleUrls: ['./to-do-list.component.css'],
   providers: [ToDoServices]
 })
+
 export class ToDoListComponent implements OnInit {
 
-  constructor(private _service: ToDoServices) { }
+  constructor(
+    private _service: ToDoServices) { }
 
   ngOnInit() {
-    
-    this._service
-    .getToDos()
-    .subscribe(todos => {
-      this.myTasks = todos.slice(),
-      this.myTasksCopy = todos.slice()},
-    error => this.errorMessage = <any>error);
+
+    this.tryConnect();
+  }
+
+  tryConnect() {
+
+      this._service
+        .getToDos()
+        .retry(2)
+        .subscribe(
+          todos => {
+          this.myTasks = todos.slice()
+          //this.myTasksCopy = todos.slice()
+          },
+          error => {
+          this.errorMessage = <any>error,
+          console.log("true") 
+          }//,
+          //() => { this.modal.openModal(false),
+          //console.log("false") }
+        );
+
+      
   }
 
   messageValue: string;
   errorMessage: string;
   private filterShowCompletedOnly: boolean = false;
 
-  private myTasksCopy: IToDo[] = [];
-  private tempTasks: IToDo[] = [];
+  //private myTasksCopy: IToDo[] = [];
+  //private tempTasks: IToDo[] = [];
   myTasks: IToDo[] = [];
-  /*get todos(): IToDo[]{
-
-      return this.myTasks;
-  }
-  set todos(value: IToDo[]) {
-
-      this.myTasks = value;
-      this.myTasksCopy = Object.assign({}, value);
-  }*/
 
   showInProgres(): void {
 
-    this.updateInProgress();
+    //this.updateInProgress();
     this.toggleVisiblity();
   }
 
-  updateInProgress(): void{
+  /*updateInProgress(): void {
 
     if (this.filterShowCompletedOnly == false) {
       //show only not completed
@@ -66,18 +76,16 @@ export class ToDoListComponent implements OnInit {
   combineAllUpToDate() {
     this.tempTasks.length = 0;
     this.myTasksCopy.slice().forEach(task => {
-      var match = this.myTasks.find(t => t.Id == task.Id );
+      var match = this.myTasks.find(t => t.Id == task.Id);
       //use visible element as default to pass around
-      if (match != null)
-      {
-          this.tempTasks.push(match);
+      if (match != null) {
+        this.tempTasks.push(match);
       }
-      else
-      {
+      else {
         this.tempTasks.push(task);
       }
     });
-  }
+  }*/
 
   toggleVisiblity(): void {
 
@@ -87,54 +95,54 @@ export class ToDoListComponent implements OnInit {
   updateTask(id: number) {
 
     let task = this.myTasks.find(x => x.Id == id);
-    
-    
-    if (this.filterShowCompletedOnly == true) {
+
+
+    /*if (this.filterShowCompletedOnly == true) {
 
       this.myTasks = this.myTasks.filter(x => x.IsComplete == false);
-    console.log(this.myTasks);
-    }
-    
+      console.log(this.myTasks);
+    }*/
+
     this._service.updateComment(task).subscribe();
   }
 
   clearCompleted(): void {
-    
-      this.myTasks.slice(0).forEach(element => {
-        if (element.IsComplete) {
 
-          this._service.deleteTodo(element.Id)
+    this.myTasks.slice(0).forEach(element => {
+      if (element.IsComplete) {
+
+        this._service.deleteTodo(element.Id)
           .subscribe(
-              (error: any) => this.errorMessage = <any>error
+            (error: any) => this.errorMessage = <any>error
           );
 
-          let index = this.myTasks.findIndex(x => x.Id == element.Id);
-          this.myTasks.splice(index, 1);
-          let indexCopy = this.myTasksCopy.findIndex(x => x.Id == element.Id);
-          this.myTasksCopy.splice(indexCopy, 1);
-        }
-      });
+        let index = this.myTasks.findIndex(x => x.Id == element.Id);
+        this.myTasks.splice(index, 1);
+        //let indexCopy = this.myTasksCopy.findIndex(x => x.Id == element.Id);
+        //this.myTasksCopy.splice(indexCopy, 1);
+      }
+    });
   }
 
   deleteEntry(id: number): void {
-    
+
     let index = this.myTasks.findIndex(x => x.Id == id);
     this.myTasks.splice(index, 1);
-    let indexCopy = this.myTasksCopy.findIndex(x => x.Id == id);
-    this.myTasksCopy.splice(indexCopy, 1);
+    //let indexCopy = this.myTasksCopy.findIndex(x => x.Id == id);
+    //this.myTasksCopy.splice(indexCopy, 1);
     console.log("delete entry: " + id);
-    
+
     this._service.deleteTodo(id)
-    .subscribe();
+      .subscribe();
   }
 
   addToDo() {
-    
-    let dummyToDo = new ToDo();
-    this._service.createToDo(dummyToDo).subscribe(todo => {
-    this.myTasks.push(todo)
-    this.myTasksCopy.push(todo);
-    console.log("Add entry: " + todo.Id);
-    });  
+
+      let dummyToDo = new ToDo();
+      this._service.createToDo(dummyToDo).subscribe(todo => {
+      this.myTasks.push(todo)
+      //this.myTasksCopy.push(todo);
+      console.log("Add entry: " + todo.Id);
+    });
   }
 }

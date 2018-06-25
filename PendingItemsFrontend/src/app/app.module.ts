@@ -20,7 +20,6 @@ import { AppBootstrapModule } from './AppBootstrapModule';
     AppBootstrapModule,
     HttpClientModule,
     FormsModule,
-    
     RouterModule.forRoot([
         { path: '', redirectTo: 'todo', pathMatch: 'full'},
         { path: '**', redirectTo: 'todo', pathMatch: 'full'}
